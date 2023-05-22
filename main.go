@@ -4,14 +4,12 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/ClickHouse/clickhouse-go/v2"
+	"github.com/ClickHouse/clickhouse-go"
 	"log"
 )
 
 const (
 	configFile = "config.yaml"
-	//clickhouseClientName    = "an-example-go-client"
-	//clickhouseClientVersion = "0.1"
 )
 
 func main() {
@@ -46,56 +44,8 @@ func main() {
 }
 
 func connect(c *Configuration) (*sql.DB, error) {
-	//var (
-	//	ctx  = context.Background()
-	//	conn = clickhouse.OpenDB(&clickhouse.Options{
-	//		Addr: []string{c.Database.Addr},
-	//		Auth: clickhouse.Auth{
-	//			Database: c.Database.Database,
-	//			Username: c.Database.Username,
-	//			Password: c.Database.Password,
-	//		},
-	//		TLS: nil,
-	//		Settings: clickhouse.Settings{
-	//			"max_execution_time": 60,
-	//		},
-	//		DialTimeout:          time.Second * 30,
-	//		Debug:                false,
-	//		BlockBufferSize:      10,
-	//		MaxCompressionBuffer: 10240,
-	//		ClientInfo: clickhouse.ClientInfo{
-	//			Products: []struct {
-	//				Name    string
-	//				Version string
-	//			}{
-	//				{Name: clickhouseClientName, Version: clickhouseClientVersion},
-	//			},
-	//		},
-	//	})
-	//conn, err = clickhouse.Open(&clickhouse.Options{
-	//	Addr: []string{c.Database.Addr},
-	//	Auth: clickhouse.Auth{
-	//		Database: c.Database.Database,
-	//		Username: c.Database.Username,
-	//		Password: c.Database.Password,
-	//	},
-	//	ClientInfo: clickhouse.ClientInfo{
-	//		Products: []struct {
-	//			Name    string
-	//			Version string
-	//		}{
-	//			{Name: clickhouseClientName, Version: clickhouseClientVersion},
-	//		},
-	//	},
-	//	Debug: false,
-	//	Debugf: func(format string, v ...interface{}) {
-	//		fmt.Printf(format, v)
-	//	},
-	//	TLS: nil,
-	//})
-	//)
 
-	connStr := fmt.Sprintf("tcp://%s/%s?dial_timeout=1s%s", c.Database.Addr, c.Database.Database, getCreds(*c))
+	connStr := fmt.Sprintf("tcp://%s?dial_timeout=1s%s", c.Database.Addr, getCreds(*c))
 	conn, err := sql.Open("clickhouse", connStr)
 	if err != nil {
 		return nil, err
@@ -113,7 +63,7 @@ func connect(c *Configuration) (*sql.DB, error) {
 func getCreds(cfg Configuration) (creds string) {
 
 	if cfg.Database.Username != "" {
-		creds = fmt.Sprintf("&username=%s&password=%s", cfg.Database.Username, cfg.Database.Password)
+		creds = fmt.Sprintf("&username=%s&password=%s&database=%s", cfg.Database.Username, cfg.Database.Password, cfg.Database.Database)
 	}
 
 	return creds
