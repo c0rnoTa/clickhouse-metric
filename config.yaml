@@ -1,0 +1,8 @@
+clickhouse:
+  addr: "<CLICKHOUSE_SECURE_NATIVE_HOSTNAME>:9440"
+  database: "default"
+  username: "default"
+  password: "<DEFAULT_USER_PASSWORD>"
+
+app:
+  query: SELECT name,toString(uuid) as uuid_str FROM system.tables LIMIT 5
