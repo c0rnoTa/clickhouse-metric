@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/ClickHouse/clickhouse-go"
 	"log"
+	_ "time/tzdata"
 )
 
 const (
