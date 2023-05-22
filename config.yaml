@@ -5,4 +5,4 @@ clickhouse:
   password: "<DEFAULT_USER_PASSWORD>"
 
 app:
-  query: SELECT name,toString(uuid) as uuid_str FROM system.tables LIMIT 5
+  query: select count(*) from pf_results where created_at between toString(date_add(hour ,-1,now())) and toString(now())
